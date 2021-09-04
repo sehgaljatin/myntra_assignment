@@ -6,13 +6,12 @@
     import UserImage from '../assets/myntra.png';
     import GenderMenu from "./Gender";
     import CategoryMenu from "./Categories";
+    import BrandMenu from "./Brand";
 
   //<Icon name='search' style={{paddingLeft: '84px'}} onClick ={this.filterProducts}/>
-
     const DataLoad = ({
         ...props
     }) => {
-
         return (
             <Dimmer active={props.active} page style={{ paddingTop: '300px' }}>
             {
@@ -34,25 +33,6 @@
             ].join('')} image={product.images[0].src} />
           );
     }
-
-    const BrandMenu = ({brand, Key, brandSelected, handleChange})=>{
-      return(
-        <>
-          <Menu.Item>
-               <Checkbox 
-               label={brand} 
-               name='brandSelected'
-               value={brand} 
-               onChange={ handleChange }/>
-          </Menu.Item>
-        </>
-        )
-    } 
-
-
-     
-
-
     class Product extends Component {
         constructor(props) {
             super(props);
@@ -70,16 +50,12 @@
                 productList: props.productList
             }
         }
-
         componentDidMount(){
             this.setState({loading: true});
             this.props.fetchData();
         }
-
         componentDidUpdate(prevProps){
-            
             if(prevProps.FETCH_DATA_STATUS != SUCCESS && this.props.FETCH_DATA_STATUS === SUCCESS){
-
                 let tempCategoryList = [];
                 let tempBrandList = [];
                 let tempGenderList = [];
@@ -88,14 +64,12 @@
                     tempBrandList.push(this.props.productList[count].brand);
                     tempGenderList.push(this.props.productList[count].gender);
                 }
-
                 this.setState({  loading: false, 
                     categoryList: [...new Set(tempCategoryList)],
                     brandList: [...new Set(tempBrandList)], 
                     genderList: [...new Set(tempGenderList)],
                     productList: this.props.productList
                });
-
             }else if(prevProps.FETCH_DATA_STATUS != FAILED && this.props.FETCH_DATA_STATUS === FAILED){
                 this.setState({validateAction: {status: FAILED, validateActionMessage: 'Error in authenticating '}, loading: false})
             }
@@ -103,7 +77,7 @@
         
 
         handleChange = ( e, { type, name, value, checked} ) => {
-          console.log({ type, name, value, checked});
+        //   console.log({ type, name, value, checked});
 
           let { genderSelected, categorySelected, brandSelected } = this.state;
 
@@ -118,16 +92,19 @@
                   return item !== value
               })
               this.setState({ [name] : tempPopValue });
-              this.filterProducts(genderSelected, tempPopValue , brandSelected );
 
+              console.log(genderSelected, tempPopValue , brandSelected);
+              this.filterProducts(genderSelected, tempPopValue , brandSelected );
             }
-            
           }else if(type === 'checkbox' && name === 'brandSelected'){
+               
+            //   console.log(this.state.brandSelected);
             if(checked){
+            
               this.setState({ [name] : [...this.state.brandSelected, value] });
               this.filterProducts(genderSelected, categorySelected , [...this.state.brandSelected, value] );
             }else{
-
+                
               let tempPopValue = this.state.brandSelected;
               tempPopValue = tempPopValue.filter(function(item) {
                   return item !== value
@@ -142,9 +119,8 @@
             this.setState({ activeItem: name});
           }
         }
-
      filterProducts = ( genderSelected, categorySelected, brandSelected  ) =>{
-
+        // console.log(genderSelected, categorySelected, brandSelected);
       this.setState({ loading:true });
       let { productList } = this.props;
       let filteredProductList = productList.filter((product) => {
@@ -155,12 +131,16 @@
                      if(brandSelected.length >0){
                           //if category, brand and gender all are selected
                           for(var count=0; count<brandSelected.length; count++){
-                            return brandSelected[count] === product.brand;
+                              if(brandSelected[count] === product.brand){
+                                return brandSelected[count] === product.brand;
+                              }
                           }
 
                       }else{
                           // if category and gender is selected
-                          return categorySelected[count] === product.category;
+                          if(categorySelected[count] === product.category){
+                            return categorySelected[count] === product.category;
+                          }
                       }
                 }
               }
@@ -169,12 +149,16 @@
               if(brandSelected.length >0){
                 // brand and gender selected
                   for(var count=0; count<brandSelected.length; count++){
-                    return brandSelected[count] === product.brand;
+                    if(brandSelected[count] === product.brand){
+                        return brandSelected[count] === product.brand;
+                    }
                   }
               }else{
                 //no brand selected and no category selected only gender selected
-                console.log(product.gender === genderSelected);
-                return product.gender === genderSelected
+
+                if(product.gender === genderSelected){
+                    return product.gender === genderSelected;
+                }
               }
           }
         }else if(genderSelected === ''){
@@ -187,12 +171,16 @@
                       if(brandSelected.length >0){
                            //if category, brand and gender all are selected
                            for(var count=0; count<brandSelected.length; count++){
-                             return brandSelected[count] === product.brand;
+                             if(brandSelected[count] === product.brand){
+                                return brandSelected[count] === product.brand;
+                             }
                            }
 
                        }else{
                            // if category and gender is selected
-                           return categorySelected[count] === product.category;
+                           if(categorySelected[count] === product.category){
+                            return categorySelected[count] === product.category;
+                           }
                        }
                  }
                }
@@ -201,7 +189,9 @@
                if(brandSelected.length >0){
                  // brand is selected
                    for(var count=0; count<brandSelected.length; count++){
-                     return brandSelected[count] === product.brand;
+                     if(brandSelected[count] === product.brand){
+                        return brandSelected[count] === product.brand;
+                     }
                    }
                }
            } 
@@ -341,7 +331,7 @@
                         <Card.Group itemsPerRow={5}>
                             {
                                 (productList != undefined ) && (
-                                  productList.slice(0,25).map((product, key)=>{
+                                  productList.slice(0,30).map((product, key)=>{
                                       return(<ProductCard Key={key} product={product} />)
                                 })
                               )
