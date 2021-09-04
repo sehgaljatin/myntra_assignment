@@ -12,13 +12,12 @@ const provider = (
 	<Provider store={store}>
 		<ConnectedRouter history={history}>
 			<Switch>
-				<Route path="/Products/" component={Product} exact/>
+				<Route path="/" component={Product} exact/>
 			</Switch>
 		</ConnectedRouter>
 
 	</Provider>
 );
-
 ReactDOM.render(provider, document.getElementById('root'));
 //registerServiceWorker();
-console.log('running with env:', process.env.REACT_APP_ENV)
+// console.log('running with env:', process.env.REACT_APP_ENV)

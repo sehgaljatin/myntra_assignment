@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimmer, Header, Icon ,Loader} from 'semantic-ui-react';
+import { Dimmer,Loader} from 'semantic-ui-react';
 
 export const PleaseWait = ({
     ...props
