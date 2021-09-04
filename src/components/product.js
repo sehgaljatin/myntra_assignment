@@ -237,8 +237,8 @@
                      onClick={this.handleItemClick}
                />
                <Menu.Item
-                     name='homeliving'
-                     active={activeItem === 'homeliving'}
+                     name='living'
+                     active={activeItem === 'living'}
                      onClick={this.handleItemClick}
                />
                <Menu.Item
