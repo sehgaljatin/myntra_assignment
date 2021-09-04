@@ -5,14 +5,13 @@ import { FETCH_DATA_PENDING, FETCH_DATA_FULFILLED, FETCH_DATA_REJECTED}
 
 
 const initialMetaState = {
-	FETCH_DATA_STATUS: DEFAULT
+	FETCH_DATA_STATUS: DEFAULT 
 }
 
 
 const initialDataState = {
 	apiData: {}
 }
-
 
 function metaReducer(state = initialMetaState, action) {
 

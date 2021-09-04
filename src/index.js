@@ -19,5 +19,3 @@ const provider = (
 	</Provider>
 );
 ReactDOM.render(provider, document.getElementById('root'));
-//registerServiceWorker();
-// console.log('running with env:', process.env.REACT_APP_ENV)

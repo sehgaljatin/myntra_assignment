@@ -1,9 +1,11 @@
     import React, { Component } from 'react';
-    import { Input, Segment, Dimmer, Icon, Message, Image, Loader, Menu, Grid, Card, Radio, Checkbox } from 'semantic-ui-react';
-    import { PENDING, FULFILLED, FAILED, SUCCESS, DISMISS } from '../helpers/constants'
+    import { Input, Segment, Dimmer, Icon, Loader, Menu, Grid, Card, Checkbox } from 'semantic-ui-react';
+    import { FAILED, SUCCESS, DISMISS } from '../helpers/constants'
     import { connect } from 'react-redux';
     import { fetchData } from '../redux/actions/config';
     import UserImage from '../assets/myntra.png';
+    import GenderMenu from "./Gender";
+    import CategoryMenu from "./Categories";
 
   //<Icon name='search' style={{paddingLeft: '84px'}} onClick ={this.filterProducts}/>
 
@@ -21,35 +23,19 @@
     }
 
     const ProductCard = ({product, Key}) =>{
-
-      let { brand, productName } = product;
+      let { brand, productName , price } = product;
       return (
+        
         <Card  link
-          header={brand}
-          meta={productName}
-          description={[
-            {productName},
-          ].join('')} image={product.images[0].src} />
-        );
+            header={brand}
+            meta={productName}
+            description={[
+              'Rs.'+price,
+            ].join('')} image={product.images[0].src} />
+          );
     }
 
-    const CategoryMenu = ({category, Key, categorySelected, handleChange})=>{
-
-      return(
-        <>
-          <Menu.Item>
-               <Checkbox 
-               label={category} 
-               name='categorySelected'
-               value={category} 
-               onChange={ handleChange }/>
-          </Menu.Item>
-        </>
-        )
-    } 
-
     const BrandMenu = ({brand, Key, brandSelected, handleChange})=>{
-
       return(
         <>
           <Menu.Item>
@@ -64,22 +50,7 @@
     } 
 
 
-    const GenderMenu = ({gender, Key, genderSelected, handleChange})=>{
-
-      return(
-        <>
-          <Menu.Item>
-           <Radio
-              label={gender}
-              name='genderSelected'
-              value={gender}
-              checked={ genderSelected === gender }
-              onChange={ handleChange }
-            />
-          </Menu.Item>
-        </>
-        )
-    } 
+     
 
 
     class Product extends Component {
@@ -88,15 +59,8 @@
             const {url} = this.props.match;
             let baseUrl = url.substring(0, url.lastIndexOf("/"));
             this.state = {
-                password: '',
                 loading: false,
                 error: false,
-                nextUrl: baseUrl + "/home",
-                login: false,
-                username: '',
-                password: '',
-                validateAction: {status: DISMISS, validateActionMessage: ''},
-                activeItem: 'home',
                 categoryList: [],
                 categorySelected: [],
                 brandList: [],
@@ -108,12 +72,12 @@
         }
 
         componentDidMount(){
-          this.setState({loading: true});
+            this.setState({loading: true});
             this.props.fetchData();
         }
 
         componentDidUpdate(prevProps){
-            const { nextUrl, username } = this.state;
+            
             if(prevProps.FETCH_DATA_STATUS != SUCCESS && this.props.FETCH_DATA_STATUS === SUCCESS){
 
                 let tempCategoryList = [];
@@ -126,10 +90,10 @@
                 }
 
                 this.setState({  loading: false, 
-                  categoryList: [...new Set(tempCategoryList)],
-                 brandList: [...new Set(tempBrandList)], 
-                 genderList: [...new Set(tempGenderList)],
-                 productList: this.props.productList
+                    categoryList: [...new Set(tempCategoryList)],
+                    brandList: [...new Set(tempBrandList)], 
+                    genderList: [...new Set(tempGenderList)],
+                    productList: this.props.productList
                });
 
             }else if(prevProps.FETCH_DATA_STATUS != FAILED && this.props.FETCH_DATA_STATUS === FAILED){
@@ -182,18 +146,11 @@
      filterProducts = ( genderSelected, categorySelected, brandSelected  ) =>{
 
       this.setState({ loading:true });
-
       let { productList } = this.props;
-
       let filteredProductList = productList.filter((product) => {
-
-
         if(genderSelected != '' &&  product.gender === genderSelected ){
-
           if( categorySelected.length >0 ){
-
               for(var count=0; count<categorySelected.length; count++){
-
                 if(categorySelected[count] === product.category){
                      if(brandSelected.length >0){
                           //if category, brand and gender all are selected
@@ -251,7 +208,6 @@
         }
 
       });
-      console.log(filteredProductList);
       this.setState({ loading:false, productList: filteredProductList });
 
      }
@@ -382,10 +338,10 @@
 
                 <Grid.Column stretched width={13}>
                   <Segment>
-                        <Card.Group itemsPerRow={4}>
+                        <Card.Group itemsPerRow={5}>
                             {
                                 (productList != undefined ) && (
-                                  productList.map((product, key)=>{
+                                  productList.slice(0,25).map((product, key)=>{
                                       return(<ProductCard Key={key} product={product} />)
                                 })
                               )
@@ -410,4 +366,4 @@
        fetchData
     }
 
-    export default connect(mapStateToProps, mapDispatchToProps)(Product)
+export default connect(mapStateToProps, mapDispatchToProps)(Product)

@@ -6,9 +6,7 @@ const _fetchData = () => {
 
 	return axios.get(FETCH_DATA_URL);
 }
-
 export const fetchData = () => {
-
 	return {
 		type: 'FETCH_DATA',
 		payload: _fetchData()
