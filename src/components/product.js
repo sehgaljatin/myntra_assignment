@@ -1,4 +1,4 @@
-    import React, { Component } from 'react';
+    import React, { Component , useState } from 'react';
     import { Input, Segment, Dimmer, Icon, Loader, Menu, Grid, Card, Checkbox } from 'semantic-ui-react';
     import { FAILED, SUCCESS, DISMISS } from '../helpers/constants'
     import { connect } from 'react-redux';
@@ -36,8 +36,6 @@
     class Product extends Component {
         constructor(props) {
             super(props);
-            const {url} = this.props.match;
-            let baseUrl = url.substring(0, url.lastIndexOf("/"));
             this.state = {
                 loading: false,
                 error: false,
@@ -119,6 +117,16 @@
             this.setState({ activeItem: name});
           }
         }
+
+        searchProducts = () => {
+            this.setState({ loading:true });
+            let { productList } = this.props;  
+            console.log("search", this.state.search);
+            let filteredProductList = productList.filter((product) => product.product.toLowerCase().includes(this.state.search.toLowerCase()));
+            this.setState({ loading:false, productList: filteredProductList });
+        }
+
+
      filterProducts = ( genderSelected, categorySelected, brandSelected  ) =>{
         // console.log(genderSelected, categorySelected, brandSelected);
       this.setState({ loading:true });
@@ -240,7 +248,8 @@
                />
                <Menu.Menu position='right'>
                  <Menu.Item>
-                    <Input icon='search' placeholder='Search...' />
+                    <Input  style={{width:'500px'}} value={this.state.search} onChange={(e) => this.setState({search: e.target.value}, () => {this.searchProducts()}) } placeholder='Search product...' />
+                    <Icon name='search' style={{marginLeft:'-20px'}} onClick ={this.searchProducts}  />
                  </Menu.Item>
                  <Menu.Item
                       name='video play'
